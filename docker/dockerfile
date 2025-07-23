@@ -1,0 +1,29 @@
+FROM php:8.2-fpm-alpine
+
+# Instala ferramentas do sistema, dependências de compilação e extensões PHP necessárias
+RUN apk add --no-cache \
+    nginx \
+    git \
+    zip \
+    unzip \
+    libsodium-dev \
+    libzip-dev \
+    icu-dev \
+    postgresql-client \
+    postgresql-dev \
+    build-base \
+    && docker-php-ext-install pdo opcache bcmath exif pcntl zip intl sodium \
+    && docker-php-ext-enable opcache
+
+# Compila e instala pgsql e pdo_pgsql manualmente
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pgsql pdo_pgsql
+
+# Limpeza para reduzir o tamanho final da imagem (incluindo build-base agora)
+RUN apk del build-base \
+    && rm -rf /var/cache/apk/*
+
+# Instala o Composer (gerenciador de dependências do PHP)
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+WORKDIR /var/www/html
