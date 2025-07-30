@@ -43,7 +43,7 @@
 <body>
     <h1>Criar Nova Tarefa</h1>
 
-    @if ($error->any())
+    @if ($errors->any())
         <div style="color: red; margin-bottom: 15px;">
             <ul>
                 @foreach ($errors->all() as $error)

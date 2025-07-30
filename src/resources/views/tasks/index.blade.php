@@ -56,13 +56,18 @@
                         <td>{{ $task->description }}</td>
                         <td>{{ $task->status }}</td>
                         <td>
-                            <a href="#">Editar</a>
-                            <a href="#">Excluir</a>
+                            <a href="{{ route('tasks.show', $task->id) }}">">Ver</a> |
+                            <a href="{{ route('tasks.edit', $task->id) }}">">Editar</a> |
+                            <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta tarefa?');" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" style="background:none; border:none; color:bluer; cursor: pointer; padding: 0; font-family: inherit; font-size: inherit;">">Excluir</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-    @endif          
+    @endif 
 </body>
 </html>
